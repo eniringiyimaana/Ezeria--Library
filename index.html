@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Asbat Digital Library - Africa's Biggest Digital Library</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            1: '#ffffff',
+                            2: '#e0f2f1',
+                            4: '#4db6ac',
+                            7: '#26a69a',
+                            8: '#00897b',
+                            9: '#00695c',
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        * { font-family: 'Inter', sans-serif; }
+        .customWidth { max-width: 1400px; margin: 0 auto; }
+        
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .accordion-content.open {
+            max-height: 600px;
+        }
+        .accordion-arrow {
+            transition: transform 0.2s ease;
+        }
+        
+        .asbatPrimaryButton {
+            background: linear-gradient(135deg, #00695c 0%, #00897b 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        .asbatPrimaryButton:hover {
+            background: linear-gradient(135deg, #00897b 0%, #26a69a 100%);
+            transform: translateY(-1px);
+        }
+        
+        .asbatSecondaryButton {
+            background: transparent;
+            color: #26a69a;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 13px;
+            border: 2px solid #26a69a;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .asbatSecondaryButton:hover {
+            background: #26a69a;
+            color: white;
+        }
+        
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        /* Simple Horizontal Scroller */
+        .scroll-container {
+            position: relative;
+            padding: 0 40px;
+        }
+        
+        .scroll-wrapper {
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+        }
+        
+        .scroll-wrapper::-webkit-scrollbar {
+            height: 6px;
+        }
+        
+        .scroll-wrapper::-webkit-scrollbar-track {
+            background: #e0e0e0;
+            border-radius: 10px;
+        }
+        
+        .scroll-wrapper::-webkit-scrollbar-thumb {
+            background: #00897b;
+            border-radius: 10px;
+        }
+        
+        .scroll-inner {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            padding: 10px 0;
+        }
+        
+        .scroll-item {
+            flex-shrink: 0;
+            width: 280px;
+        }
+        
+        .scroll-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: all 0.2s ease;
+            font-size: 20px;
+            font-weight: bold;
+            color: #00695c;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .scroll-btn:hover {
+            background: #00897b;
+            color: white;
+            border-color: #00897b;
+        }
+        
+        .scroll-btn-left {
+            left: 0;
+        }
+        
+        .scroll-btn-right {
+            right: 0;
+        }
+        
+        .doc-card {
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        .doc-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        footer a {
+            transition: color 0.2s ease;
+        }
+        
+        /* Hero Background */
+        .hero-bg {
+            background-image: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1600&h=600&fit=crop');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0,105,92,0.85) 0%, rgba(0,137,123,0.85) 100%);
+            z-index: 1;
+        }
+        .hero-bg > * {
+            position: relative;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Navigation -->
+    <nav class="bg-primary-9 text-white py-4 px-6 shadow-lg sticky top-0 z-50">
+        <div class="customWidth flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                </svg>
+                <span class="font-bold text-xl">ASBAT Digital Library</span>
+            </div>
+            <div class="hidden md:flex gap-6">
+                <a href="#" class="hover:text-primary-2 transition">Library</a>
+                <a href="#" class="hover:text-primary-2 transition">Premium Resources</a>
+                <a href="#" class="hover:text-primary-2 transition">Bookstore</a>
+                <a href="#" class="hover:text-primary-2 transition">Ask Librarian</a>
+                <a href="#" class="hover:text-primary-2 transition">Login/Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section with Background Image -->
+    <section class="hero-bg py-16">
+        <div class="customWidth px-4">
+            <div class="flex flex-wrap gap-2 justify-center mb-8">
+                <button class="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-5 py-2.5 rounded-md text-sm font-medium transition border border-white/30">All</button>
+                <button class="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-5 py-2.5 rounded-md text-sm font-medium transition border border-white/30">Dissertations</button>
+                <button class="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-5 py-2.5 rounded-md text-sm font-medium transition border border-white/30">Holiday Packages</button>
+                <button class="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-5 py-2.5 rounded-md text-sm font-medium transition border border-white/30">Notes</button>
+                <button class="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-5 py-2.5 rounded-md text-sm font-medium transition border border-white/30">Past Papers</button>
+                <button class="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-5 py-2.5 rounded-md text-sm font-medium transition border border-white/30">Reports</button>
+                <button class="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-5 py-2.5 rounded-md text-sm font-medium transition border border-white/30">Text Books</button>
+                <button class="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-5 py-2.5 rounded-md text-sm font-medium transition border border-white/30">Videos</button>
+                <button class="bg-primary-8 hover:bg-primary-7 text-white px-5 py-2.5 rounded-md text-sm font-medium transition flex items-center gap-1 shadow-lg">
+                    All Resource Types
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+            </div>
+            
+            <div class="max-w-3xl mx-auto">
+                <form onsubmit="event.preventDefault(); alert('Search functionality would connect to backend');">
+                    <div class="flex shadow-xl rounded-full overflow-hidden">
+                        <input type="text" 
+                               placeholder="Search 1,003,219 files in 7,833 Subjects from 1966 to 2026"
+                               class="flex-1 px-6 py-4 text-gray-700 focus:outline-none text-sm bg-white">
+                        <button class="bg-primary-9 hover:bg-primary-8 text-white px-8 py-4 transition flex items-center gap-2 font-medium">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                            Search
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content with Sidebar -->
+    <section class="customWidth px-4 py-8">
+        <div class="grid grid-cols-1 md:grid-cols-[320px_1fr] gap-8">
+            
+            <!-- LEFT SIDEBAR -->
+            <div class="bg-primary-9 rounded-lg overflow-hidden shadow-lg h-fit sticky top-24">
+                <div class="p-4 border-b border-white/20">
+                    <h2 class="text-white font-bold text-xl text-center">Levels</h2>
+                </div>
+                <div class="divide-y divide-white/20">
+                    <div>
+                        <button class="accordion-trigger w-full flex items-center justify-between p-4 text-white font-semibold hover:bg-white/10 transition text-left" data-target="pre-primary">
+                            <span>Pre-Primary</span>
+                            <svg class="accordion-arrow w-5 h-5 transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div id="pre-primary" class="accordion-content open">
+                            <div class="bg-white p-4 space-y-2">
+                                <a href="#" class="block text-primary-9 hover:text-primary-7 hover:underline py-1">Baby Class</a>
+                                <a href="#" class="block text-primary-9 hover:text-primary-7 hover:underline py-1">Middle Class</a>
+                                <a href="#" class="block text-primary-9 hover:text-primary-7 hover:underline py-1">Top Class</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="accordion-trigger w-full flex items-center justify-between p-4 text-white font-semibold hover:bg-white/10 transition text-left" data-target="primary">
+                            <span>Primary</span>
+                            <svg class="accordion-arrow w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div id="primary" class="accordion-content">
+                            <div class="bg-white p-4 space-y-2">
+                                <a href="#" class="block text-primary-9 hover:text-primary-7 hover:underline py-1">Primary One</a>
+                                <a href="#" class="block text-primary-9 hover:text-primary-7 hover:underline py-1">Primary Two</a>
+                                <a href="#" class="block text-primary-9 hover:text-primary-7 hover:underline py-1">Primary Three</a>
+                                <a href="#" class="block text-primary-9 hover:text-primary-7 hover:underline py-1">Primary Four</a>
+                                <a href="#" class="block text-primary-9 hover:text-primary-7 hover:underline py-1">Primary Five</a>
+                                <a href="#" class="block text-primary-9 hover:text-primary-7 hover:underline py-1">Primary Six</a>
+                                <a href="#" class="block text-primary-9 hover:text-primary-7 hover:underline py-1">Primary Seven</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="accordion-trigger w-full flex items-center justify-between p-4 text-white font-semibold hover:bg-white/10 transition text-left" data-target="secondary">
+                            <span>Secondary</span>
+                            <svg class="accordion-arrow w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div id="secondary" class="accordion-content">
+                            <div class="bg-white p-4 space-y-3">
+                                <div><p class="font-bold text-primary-8 text-xs uppercase tracking-wider mb-2">Ordinary Level</p>
+                                    <div class="space-y-1 pl-2">
+                                        <a href="#" class="block text-primary-9 hover:text-primary-7 hover:underline py-1 text-sm">Senior One</a>
+                                        <a href="#" class="block text-primary-9 hover:text-primary-7 hover:underline py-1 text-sm">Senior Two</a>
+                                        <a href="#" class="block text-primary-9 hover:text-primary-7 hover:underline py-1 text-sm">Senior Three</a>
+                                        <a href="#" class="block text-primary-9 hover:text-primary-7 hover:underline py-1 text-sm">Senior Four</a>
+                                    </div>
+                                </div>
+                                <div><p class="font-bold text-primary-8 text-xs uppercase tracking-wider mb-2 mt-3">Advanced Level</p>
+                                    <div class="space-y-1 pl-2">
+                                        <a href="#" class="block text-primary-9 hover:text-primary-7 hover:underline py-1 text-sm">Senior Five</a>
+                                        <a href="#" class="block text-primary-9 hover:text-primary-7 hover:underline py-1 text-sm">Senior Six</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="accordion-trigger w-full flex items-center justify-between p-4 text-white font-semibold hover:bg-white/10 transition text-left" data-target="tertiary">
+                            <span>Tertiary</span>
+                            <svg class="accordion-arrow w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div id="tertiary" class="accordion-content">
+                            <div class="bg-white p-4 space-y-2">
+                                <a href="#" class="block text-primary-9 hover:text-primary-7 hover:underline py-1">Certificate</a>
+                                <a href="#" class="block text-primary-9 hover:text-primary-7 hover:underline py-1">Diploma</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="accordion-trigger w-full flex items-center justify-between p-4 text-white font-semibold hover:bg-white/10 transition text-left" data-target="university">
+                            <span>University</span>
+                            <svg class="accordion-arrow w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div id="university" class="accordion-content">
+                            <div class="bg-white p-4 space-y-2">
+                                <a href="#" class="block text-primary-9 hover:text-primary-7 hover:underline py-1">Undergraduate</a>
+                                <a href="#" class="block text-primary-9 hover:text-primary-7 hover:underline py-1">Postgraduate</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="accordion-trigger w-full flex items-center justify-between p-4 text-white font-semibold hover:bg-white/10 transition text-left" data-target="professional">
+                            <span>Professional Course</span>
+                            <svg class="accordion-arrow w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div id="professional" class="accordion-content">
+                            <div class="bg-white p-4 space-y-2">
+                                <a href="#" class="block text-primary-9 hover:text-primary-7 hover:underline py-1">ACCA</a>
+                                <a href="#" class="block text-primary-9 hover:text-primary-7 hover:underline py-1">CPA</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- RIGHT CONTENT AREA -->
+            <div class="space-y-10">
+                
+                <!-- RECENT DOCUMENTS -->
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-gray-800 font-bold text-xl">Recent Documents</h3>
+                        <a href="#" class="text-primary-8 hover:text-primary-9 text-sm font-medium hover:underline">View all →</a>
+                    </div>
+                    <div class="scroll-container">
+                        <div class="scroll-btn scroll-btn-left recent-left">‹</div>
+                        <div class="scroll-wrapper recent-wrapper">
+                            <div class="scroll-inner" id="recentDocsContainer"></div>
+                        </div>
+                        <div class="scroll-btn scroll-btn-right recent-right">›</div>
+                    </div>
+                </div>
+                
+                <!-- MOST DOWNLOADED DOCUMENTS -->
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-gray-800 font-bold text-xl">Most Downloaded Documents</h3>
+                        <a href="#" class="text-primary-8 hover:text-primary-9 text-sm font-medium hover:underline">View all →</a>
+                    </div>
+                    <div class="scroll-container">
+                        <div class="scroll-btn scroll-btn-left downloaded-left">‹</div>
+                        <div class="scroll-wrapper downloaded-wrapper">
+                            <div class="scroll-inner" id="downloadedDocsContainer"></div>
+                        </div>
+                        <div class="scroll-btn scroll-btn-right downloaded-right">›</div>
+                    </div>
+                </div>
+                
+                <!-- PREMIUM DOCUMENTS -->
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-gray-800 font-bold text-xl">Premium Documents</h3>
+                        <a href="#" class="text-primary-8 hover:text-primary-9 text-sm font-medium hover:underline">View all →</a>
+                    </div>
+                    <div class="scroll-container">
+                        <div class="scroll-btn scroll-btn-left premium-left">‹</div>
+                        <div class="scroll-wrapper premium-wrapper">
+                            <div class="scroll-inner" id="premiumDocsContainer"></div>
+                        </div>
+                        <div class="scroll-btn scroll-btn-right premium-right">›</div>
+                    </div>
+                </div>
+                
+                <!-- BOOK STORE -->
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-gray-800 font-bold text-xl">Book Store</h3>
+                        <a href="#" class="text-primary-8 hover:text-primary-9 text-sm font-medium hover:underline">View all →</a>
+                    </div>
+                    <div class="scroll-container">
+                        <div class="scroll-btn scroll-btn-left book-left">‹</div>
+                        <div class="scroll-wrapper book-wrapper">
+                            <div class="scroll-inner" id="bookstoreContainer"></div>
+                        </div>
+                        <div class="scroll-btn scroll-btn-right book-right">›</div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-[#1a1a1a] py-16 mt-12">
+        <div class="customWidth px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <a href="https://whatsapp.com/channel/0029Va7jVzb9cDDdYQpjRa45" target="_blank" class="flex flex-col items-center justify-center gap-3 p-6 bg-[#252525] rounded-xl hover:bg-[#2f2f2f] transition-all group">
+                    <div class="w-14 h-14 bg-primary-7 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.008-.57-.008-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                        </svg>
+                    </div>
+                    <p class="text-white font-medium text-center">Join Whatsapp Channel</p>
+                </a>
+                
+                <div class="flex flex-col items-center justify-center gap-3 p-6 bg-[#1e1e1e] rounded-xl">
+                    <div class="w-14 h-14 bg-primary-7 rounded-full flex items-center justify-center">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <p class="text-white font-medium text-center">info@asbatdigitallibrary.org</p>
+                </div>
+                
+                <div class="flex flex-col items-center justify-center gap-3 p-6 bg-[#252525] rounded-xl">
+                    <div class="w-14 h-14 bg-primary-7 rounded-full flex items-center justify-center">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                    </div>
+                    <p class="text-white font-medium text-center text-sm">Plot 3, KTS Road Makerere University after Infectious Diseases Institute</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
+                <div>
+                    <h4 class="text-white font-bold text-lg mb-4">About</h4>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Asbat Digital Library – a member-based library dedicated to preserving educational, cultural, and scholarly heritage. We serve schools, universities, and communities, guided by our mission, vision, and core values, ensuring that all supporters and members understand and uphold our principles.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-bold text-lg mb-4">Available content</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-primary-4 text-sm transition">Text books</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary-4 text-sm transition">Holiday packages</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary-4 text-sm transition">Past papers</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary-4 text-sm transition">Notes</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary-4 text-sm transition">Planning guides</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary-4 text-sm transition">Proposals</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary-4 text-sm transition">Dissertations and Thesis</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-bold text-lg mb-4">Quick links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-primary-4 text-sm transition">Login</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary-4 text-sm transition">Contact us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary-4 text-sm transition">Go home</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-bold text-lg mb-4">Contribute to library</h4>
+                    <div class="flex flex-col gap-3">
+                        <button onclick="alert('Add New Content form would open')" class="asbatSecondaryButton w-full text-center">Add New Content</button>
+                        <button onclick="alert('Donation page would open')" class="asbatSecondaryButton w-full text-center">Donate</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="pt-6 border-t border-gray-800 text-center">
+                <p class="text-gray-500 text-sm">
+                    Copyright © 2026 All rights reserved by Asbat Digital Library. Built by <a href="https://www.jeslor.com" target="_blank" class="text-primary-4 hover:underline">Jeslor.com</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Data
+        const recentDocs = [
+            { title: "P5 ENGLISH - KAWEEISI PUBLISHERS UNDERSTANDING BOOK 2026", subject: "English", author: "Kaweeisi publishers", year: "2026", level: "Primary", type: "TEXT BOOKS", pages: 231, downloads: 0, time: "2 hours ago" },
+            { title: "S.4 HISTORY & POLITICAL EDUCATION PAPER 1 - APEX PRE-ENTRY 2026", subject: "History & Political Education", author: "Apex examination council", year: "2026", level: "Secondary", type: "PAST PAPERS", pages: 23, downloads: 0, time: "2 hours ago" },
+            { title: "S.4 ENGLISH PAPER 1 - APEX MOCK EXAMINATIONS 2025", subject: "English", author: "Apex examination council", year: "2026", level: "Secondary", type: "PAST PAPERS", pages: 7, downloads: 0, time: "2 hours ago" },
+            { title: "S.5 ENGLISH PAPER 1 - APEX MOCK EXAMINATIONS 2025", subject: "English", author: "Apex examination council", year: "2026", level: "Secondary", type: "PAST PAPERS", pages: 7, downloads: 0, time: "2 hours ago" },
+            { title: "S.5 ECONOMICS - WUNNA ASSESSMENT 2026", subject: "Economics", author: "Wunna Services", year: "2026", level: "Secondary", type: "PAST PAPERS", pages: 12, downloads: 0, time: "1 hour ago" },
+            { title: "P.7 SCIENCE - WILSON UNDERSTANDING 2026", subject: "Science", author: "Wilson", year: "2026", level: "Primary", type: "TEXT BOOKS", pages: 23, downloads: 0, time: "55 minutes ago" }
+        ];
+        
+        const downloadedDocs = [
+            { title: "1000 REVISION QUESTIONS IN UACE MATHEMATICS - THE MATH CLINIC 2025", subject: "Mathematics", author: "The Math Clinic", year: "2026", level: "Secondary", type: "TEXT BOOKS", pages: 126, downloads: 65, time: "2 months ago" },
+            { title: "P7 SST & R.E - ACADEMIC ACHIEVERS EXAMINATIONS BOARD 2026", subject: "SST & R.E", author: "Academic Achievers Board", year: "2026", level: "Primary", type: "PAST PAPERS", pages: 14, downloads: 63, time: "2 months ago" },
+            { title: "A LEVEL CHEMISTRY NOTES - HYDROCARBONS 2026", subject: "Chemistry", author: "ADL", year: "2026", level: "Secondary", type: "NOTES", pages: 3, downloads: 61, time: "2 months ago" },
+            { title: "P.7 SCIENCE LESSON PLAN BOOKLET TERM II 2026", subject: "Science", author: "Asbat Consult", year: "2026", level: "Primary", type: "LESSON PLANS", pages: 200, downloads: 45, time: "1 month ago" },
+            { title: "P.3 READING LESSON NOTES - TERM TWO 2026", subject: "Reading", author: "ADL", year: "2026", level: "Primary", type: "NOTES", pages: 5, downloads: 87, time: "24 days ago" }
+        ];
+        
+        const premiumDocs = [
+            { title: "P.5 SCIENCE LESSON PLAN BOOKLET TERM II 2026", subject: "Science", author: "Asbat Educational Consult", year: "2026", level: "Primary", type: "LESSON PLANS", pages: 200, downloads: 15, time: "3 days ago", price: "5,000" },
+            { title: "P.5 MATHEMATICS LESSON PLAN BOOKLET TERM II 2026", subject: "Mathematics", author: "Asbat Educational Consult", year: "2026", level: "Primary", type: "LESSON PLANS", pages: 246, downloads: 12, time: "3 days ago", price: "5,000" },
+            { title: "P.5 ENGLISH LESSON PLAN BOOKLET TERM II 2026", subject: "English", author: "Asbat Educational Consult", year: "2026", level: "Primary", type: "LESSON PLANS", pages: 210, downloads: 8, time: "3 days ago", price: "5,000" },
+            { title: "P.6 SST LESSON PLAN BOOKLET TERM II 2026", subject: "Social Studies", author: "Asbat Educational Consult", year: "2026", level: "Primary", type: "LESSON PLANS", pages: 180, downloads: 25, time: "3 days ago", price: "5,000" },
+            { title: "P.6 SCIENCE LESSON PLAN BOOKLET TERM II 2026", subject: "Science", author: "Asbat Educational Consult", year: "2026", level: "Primary", type: "LESSON PLANS", pages: 190, downloads: 18, time: "3 days ago", price: "5,000" }
+        ];
+        
+        const books = [
+            { title: "P.7 R.E Topical Revision Workbook - Term 2 2026", author: "ASBAT Educational Consult", subject: "RELIGIOUS EDUCATION", price: "12,000" },
+            { title: "P.7 Mathematics Topical Workbook - Term 2 2026", author: "ASBAT Educational Consult", subject: "MATHEMATICS", price: "12,000" },
+            { title: "P.6 R.E Topical Revision Workbook - Term 2 2026", author: "ASBAT Educational Consult", subject: "RELIGIOUS EDUCATION", price: "12,000" },
+            { title: "The Continental History of Africa: S.5 & S.6", author: "Wakhida Mubaraka", subject: "HISTORY", price: "35,000" },
+            { title: "P.6 English Topical Workbook - Term 2 2026", author: "ASBAT Educational Consult", subject: "ENGLISH", price: "12,000" }
+        ];
+        
+        function createDocCard(doc, isPremium = false) {
+            const iconColor = isPremium ? 'bg-amber-100' : 'bg-primary-100';
+            const iconSvg = isPremium ? 
+                `<svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>` :
+                `<svg class="w-4 h-4 text-primary-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>`;
+            const btnText = isPremium ? `Buy ${doc.price} UGX` : 'Download';
+            
+            return `<div class="scroll-item"><div class="doc-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all flex flex-col h-full"><div class="h-1.5 w-full bg-primary-9"></div><div class="p-4 flex-1 flex flex-col"><div class="flex items-center justify-between mb-3"><div class="flex items-center gap-2"><div class="w-8 h-8 ${iconColor} rounded-lg flex items-center justify-center">${iconSvg}</div><span class="text-xs font-bold text-gray-500 uppercase">PDF</span></div><span class="text-[10px] font-bold bg-primary-9 text-white px-2 py-0.5 rounded">${doc.type}</span></div><a href="#" class="block font-bold text-sm text-gray-900 hover:text-primary-8 leading-tight line-clamp-2 mb-3">${doc.title}</a><div class="space-y-1.5 mb-3 flex-1"><p class="text-xs text-gray-500 flex items-center gap-1.5"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>${doc.subject}</p><p class="text-xs text-gray-500 flex items-center gap-1.5"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>${doc.author}</p><p class="text-xs text-gray-500 flex items-center gap-1.5"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>${doc.year}</p><p class="text-xs text-gray-500 flex items-center gap-1.5"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>${doc.level}</p></div><div class="flex items-center justify-between text-xs text-gray-400 pt-2 border-t border-gray-100 mb-3"><span class="flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>${doc.time}</span><span class="flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>${doc.downloads} downloads</span><span class="flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>${doc.pages}p</span></div><button onclick="alert('${isPremium ? 'Purchase' : 'Download'}: ${doc.title}')" class="asbatPrimaryButton w-full flex items-center justify-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>${btnText}</button></div></div></div>`;
+        }
+        
+        function createBookCard(book) {
+            return `<div class="scroll-item"><div class="doc-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all h-full flex flex-col"><div class="h-1.5 w-full bg-primary-9"></div><div class="p-4 flex-1 flex flex-col"><div class="flex items-center gap-2 mb-3"><div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center"><svg class="w-5 h-5 text-primary-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg></div><span class="text-xs font-bold text-gray-500 uppercase">BOOK</span></div><a href="#" class="block font-bold text-sm text-gray-900 hover:text-primary-8 leading-tight line-clamp-2 mb-2">${book.title}</a><p class="text-xs text-gray-500 mb-1">${book.author}</p><p class="text-xs font-bold text-primary-8 mb-2">${book.subject}</p><p class="text-sm font-bold text-gray-900 mb-3">${book.price} UGX</p><button onclick="alert('Buy: ${book.title}')" class="asbatPrimaryButton w-full flex items-center justify-center gap-1 mt-auto"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>Buy at ${book.price} UGX</button></div></div></div>`;
+        }
+        
+        // Render
+        document.getElementById('recentDocsContainer').innerHTML = recentDocs.map(d => createDocCard(d)).join('');
+        document.getElementById('downloadedDocsContainer').innerHTML = downloadedDocs.map(d => createDocCard(d)).join('');
+        document.getElementById('premiumDocsContainer').innerHTML = premiumDocs.map(d => createDocCard(d, true)).join('');
+        document.getElementById('bookstoreContainer').innerHTML = books.map(b => createBookCard(b)).join('');
+        
+        // Scroll Functions
+        function setupScroll(containerClass, leftBtnClass, rightBtnClass) {
+            const wrapper = document.querySelector(`.${containerClass}`);
+            const leftBtn = document.querySelector(`.${leftBtnClass}`);
+            const rightBtn = document.querySelector(`.${rightBtnClass}`);
+            
+            if (!wrapper) return;
+            
+            if (leftBtn) {
+                leftBtn.addEventListener('click', () => {
+                    wrapper.scrollBy({ left: -300, behavior: 'smooth' });
+                });
+            }
+            
+            if (rightBtn) {
+                rightBtn.addEventListener('click', () => {
+                    wrapper.scrollBy({ left: 300, behavior: 'smooth' });
+                });
+            }
+        }
+        
+        setupScroll('recent-wrapper', 'recent-left', 'recent-right');
+        setupScroll('downloaded-wrapper', 'downloaded-left', 'downloaded-right');
+        setupScroll('premium-wrapper', 'premium-left', 'premium-right');
+        setupScroll('book-wrapper', 'book-left', 'book-right');
+        
+        // Accordion functionality
+        document.querySelectorAll('.accordion-trigger').forEach(button => {
+            button.addEventListener('click', () => {
+                const targetId = button.getAttribute('data-target');
+                const target = document.getElementById(targetId);
+                const arrow = button.querySelector('.accordion-arrow');
+                const isOpen = target.classList.contains('open');
+                document.querySelectorAll('.accordion-content').forEach(c => c.classList.remove('open'));
+                document.querySelectorAll('.accordion-arrow').forEach(a => a.style.transform = 'rotate(0deg)');
+                if (!isOpen) {
+                    target.classList.add('open');
+                    arrow.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

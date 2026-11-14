@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Login / Sign Up - Asbat Digital Library</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            1: '#ffffff',
+                            2: '#e0f2f1',
+                            4: '#4db6ac',
+                            7: '#26a69a',
+                            8: '#00897b',
+                            9: '#00695c',
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        * { font-family: 'Inter', sans-serif; }
+        .customWidth { max-width: 1400px; margin: 0 auto; }
+        
+        .asbatPrimaryButton {
+            background: linear-gradient(135deg, #00695c 0%, #00897b 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        .asbatPrimaryButton:hover {
+            background: linear-gradient(135deg, #00897b 0%, #26a69a 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,105,92,0.3);
+        }
+        
+        .tab-active {
+            border-bottom: 3px solid #00897b;
+            color: #00897b;
+        }
+        
+        .tab-inactive {
+            color: #9ca3af;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab-inactive:hover {
+            color: #00897b;
+            border-bottom-color: #e0f2f1;
+        }
+        
+        input:focus {
+            outline: none;
+            ring: 2px solid #00897b;
+            border-color: #00897b;
+        }
+        
+        /* Hero Background */
+        .hero-bg {
+            background-image: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1600&h=500&fit=crop');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0,105,92,0.85) 0%, rgba(0,137,123,0.85) 100%);
+            z-index: 1;
+        }
+        .hero-bg > * {
+            position: relative;
+            z-index: 2;
+        }
+        
+        footer a {
+            transition: color 0.2s ease;
+        }
+        
+        .asbatSecondaryButton {
+            background: transparent;
+            color: #26a69a;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 13px;
+            border: 2px solid #26a69a;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .asbatSecondaryButton:hover {
+            background: #26a69a;
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Navigation -->
+    <nav class="bg-primary-9 text-white py-4 px-6 shadow-lg sticky top-0 z-50">
+        <div class="customWidth flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                </svg>
+                <span class="font-bold text-xl">ASBAT Digital Library</span>
+            </div>
+            <div class="hidden md:flex gap-6">
+                <a href="#" class="hover:text-primary-2 transition">Library</a>
+                <a href="#" class="hover:text-primary-2 transition">Premium Resources</a>
+                <a href="#" class="hover:text-primary-2 transition">Bookstore</a>
+                <a href="#" class="hover:text-primary-2 transition">Ask Librarian</a>
+                <a href="#" class="bg-white/20 px-3 py-1 rounded-md hover:bg-white/30 transition">Login/Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="bg-gray-100 py-3 px-6 border-b">
+        <div class="customWidth flex items-center gap-2 text-sm">
+            <a href="#" class="text-gray-600 hover:text-primary-8">Home</a>
+            <span class="text-gray-400">/</span>
+            <span class="text-primary-8 font-medium">login / sign up</span>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero-bg py-16">
+        <div class="customWidth px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">ASBAT Digital Library</h1>
+        </div>
+    </section>
+
+    <!-- Main Content - Login/Register Tabs -->
+    <section class="customWidth px-4 py-12">
+        <div class="max-w-4xl mx-auto">
+            <!-- Tabs -->
+            <div class="flex border-b border-gray-200 mb-8">
+                <button id="loginTab" class="tab-active px-6 py-3 text-base font-semibold transition-colors duration-200">
+                    Login
+                </button>
+                <button id="registerTab" class="tab-inactive px-6 py-3 text-base font-semibold transition-colors duration-200">
+                    Register
+                </button>
+            </div>
+
+            <!-- Login Form -->
+            <div id="loginForm" class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">Login with your phone number and password or email and password</h2>
+                
+                <form onsubmit="event.preventDefault(); alert('Login successful! Redirecting to dashboard...');">
+                    <!-- Phone Number Option -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Phone number</label>
+                        <input type="tel" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:border-primary-8 focus:ring-2 focus:ring-primary-8/20 transition" placeholder="+256 700 000 000">
+                    </div>
+                    
+                    <div class="relative flex items-center justify-center my-4">
+                        <div class="flex-grow h-px bg-gray-300"></div>
+                        <span class="flex-shrink px-4 text-sm text-gray-500 bg-white">OR</span>
+                        <div class="flex-grow h-px bg-gray-300"></div>
+                    </div>
+                    
+                    <!-- Email Option -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email address</label>
+                        <input type="email" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:border-primary-8 focus:ring-2 focus:ring-primary-8/20 transition" placeholder="you@example.com">
+                    </div>
+                    
+                    <!-- Password -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Password*</label>
+                        <input type="password" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:border-primary-8 focus:ring-2 focus:ring-primary-8/20 transition" placeholder="Enter your password">
+                    </div>
+                    
+                    <!-- Reset Password Link -->
+                    <div class="text-right mb-6">
+                        <a href="#" class="text-sm text-primary-8 hover:underline" onclick="alert('Password reset link sent to your email'); return false;">Reset Password</a>
+                    </div>
+                    
+                    <!-- Login Button -->
+                    <button type="submit" class="asbatPrimaryButton w-full flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+                        </svg>
+                        Login
+                    </button>
+                </form>
+            </div>
+
+            <!-- Register Form (Hidden by default) -->
+            <div id="registerForm" class="bg-white rounded-xl shadow-lg p-6 md:p-8 hidden">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">Sign up for an account</h2>
+                
+                <form onsubmit="event.preventDefault(); alert('Registration successful! Please check your email to verify your account.');">
+                    <!-- Username -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                        <input type="text" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:border-primary-8 focus:ring-2 focus:ring-primary-8/20 transition" placeholder="Jeslor Ssozi">
+                    </div>
+                    
+                    <!-- Phone Number -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Phone number</label>
+                        <input type="tel" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:border-primary-8 focus:ring-2 focus:ring-primary-8/20 transition" placeholder="0707 000000">
+                    </div>
+                    
+                    <!-- Email Address -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email address</label>
+                        <input type="email" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:border-primary-8 focus:ring-2 focus:ring-primary-8/20 transition" placeholder="jeslor.ssozi@email.com">
+                    </div>
+                    
+                    <!-- Password -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Password*</label>
+                        <input type="password" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:border-primary-8 focus:ring-2 focus:ring-primary-8/20 transition" placeholder="Create a strong password">
+                    </div>
+                    
+                    <!-- Register Button -->
+                    <button type="submit" class="asbatPrimaryButton w-full flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+                        </svg>
+                        Register
+                    </button>
+                </form>
+            </div>
+
+            <!-- Info Text -->
+            <div class="mt-8 text-center">
+                <p class="text-gray-600 text-sm leading-relaxed">
+                    Join thousands of people now using the ASBAT Digital Library to improve their knowledge, boost skills, 
+                    and stay ahead in their fields. Whether you're interested in personal development, professional skills, 
+                    or academic success, ASBAT has resources to support your journey. Get unlimited access to a vast collection 
+                    of media files, articles, research papers—all and much more in one digital space.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-[#1a1a1a] py-12 mt-12">
+        <div class="customWidth px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <a href="https://whatsapp.com/channel/0029Va7jVzb9cDDdYQpjRa45" target="_blank" class="flex flex-col items-center justify-center gap-3 p-5 bg-[#252525] rounded-xl hover:bg-[#2f2f2f] transition-all group">
+                    <div class="w-12 h-12 bg-primary-7 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.008-.57-.008-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                        </svg>
+                    </div>
+                    <p class="text-white font-medium text-center text-sm">Join Whatsapp Channel</p>
+                </a>
+                
+                <div class="flex flex-col items-center justify-center gap-3 p-5 bg-[#1e1e1e] rounded-xl">
+                    <div class="w-12 h-12 bg-primary-7 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <p class="text-white font-medium text-center text-sm">info@asbatdigitallibrary.org</p>
+                </div>
+                
+                <div class="flex flex-col items-center justify-center gap-3 p-5 bg-[#252525] rounded-xl">
+                    <div class="w-12 h-12 bg-primary-7 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                    </div>
+                    <p class="text-white font-medium text-center text-xs">Plot 3, KTS Road Makerere University after Infectious Diseases Institute</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div>
+                    <h4 class="text-white font-bold text-base mb-3">About</h4>
+                    <p class="text-gray-400 text-xs leading-relaxed">
+                        Asbat Digital Library – a member-based library dedicated to preserving educational, cultural, and scholarly heritage. We serve schools, universities, and communities, guided by our mission, vision, and core values.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-bold text-base mb-3">Available content</h4>
+                    <ul class="space-y-1">
+                        <li><a href="#" class="text-gray-400 hover:text-primary-4 text-xs transition">Text books</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary-4 text-xs transition">Holiday packages</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary-4 text-xs transition">Past papers</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary-4 text-xs transition">Notes</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary-4 text-xs transition">Plans</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary-4 text-xs transition">Marking guides</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary-4 text-xs transition">Proposals</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary-4 text-xs transition">Dissertations and Thesis</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-bold text-base mb-3">Quick links</h4>
+                    <ul class="space-y-1">
+                        <li><a href="#" class="text-gray-400 hover:text-primary-4 text-xs transition">Login</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary-4 text-xs transition">Contact us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary-4 text-xs transition">Go home</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-bold text-base mb-3">Contribute to library</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Add New Content form would open')" class="asbatSecondaryButton w-full text-center text-xs py-2">Add New Content</button>
+                        <button onclick="alert('Donation page would open')" class="asbatSecondaryButton w-full text-center text-xs py-2">Donate</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="pt-5 border-t border-gray-800 text-center">
+                <p class="text-gray-500 text-xs">
+                    Copyright © 2026 All rights reserved by Asbat Digital Library. Built by <a href="https://www.jeslor.com" target="_blank" class="text-primary-4 hover:underline">Jeslor.com</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        const loginTab = document.getElementById('loginTab');
+        const registerTab = document.getElementById('registerTab');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+
+        function switchToLogin() {
+            loginTab.classList.remove('tab-inactive');
+            loginTab.classList.add('tab-active');
+            registerTab.classList.remove('tab-active');
+            registerTab.classList.add('tab-inactive');
+            loginForm.classList.remove('hidden');
+            registerForm.classList.add('hidden');
+        }
+
+        function switchToRegister() {
+            registerTab.classList.remove('tab-inactive');
+            registerTab.classList.add('tab-active');
+            loginTab.classList.remove('tab-active');
+            loginTab.classList.add('tab-inactive');
+            registerForm.classList.remove('hidden');
+            loginForm.classList.add('hidden');
+        }
+
+        loginTab.addEventListener('click', switchToLogin);
+        registerTab.addEventListener('click', switchToRegister);
+    </script>
+</body>
+</html>
